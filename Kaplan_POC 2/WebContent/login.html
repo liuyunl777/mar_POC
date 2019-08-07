@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+<style type="text/css">
+    body {
+      background: gray url(https://backgroundcheckall.com/wp-content/uploads/2017/12/seamless-repeating-background-9.jpg) repeat 0 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  height: 300px;
+  padding-top: 120px;
+  box-sizing: border-box;
+  -webkit-animation: slide 20s linear infinite;
+    }
+    body > .grid {
+      height: 100%;
+    }
+    .image {
+      margin-top: -100px;
+    }
+    .column {
+      max-width: 450px;
+    }
+    @-webkit-keyframes slide {
+    from { background-position: 0 0; }
+    to { background-position: -400px 0; }
+}
+   
+  </style>
+</head>
+<body>
+<div>
+
+<!-- <video id="video" float="left" padding-left="10%" padding-top="30%"  width="700px" height="550px" loop autoplay muted>
+  <source src="http://mirrors.standaloneinstaller.com/video-sample/star_trails.mp4" type="video/mp4">
+  <source src="movie.ogg" type="video/ogg">
+Your browser does not support the video tag.
+</video> -->
+
+
+<div  class="ui middle aligned center aligned grid">
+  <div class="column">
+    <h2 class="ui teal image header">
+    
+      <div class="content">
+        Log-in to your account
+      </div>
+    </h2>
+    <form id="login_form" class="ui large form">
+      <div class="ui stacked segment inverted">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="email" placeholder="E-mail address">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="Password">
+          </div>
+        </div>
+       
+        <div class="ui fluid large teal submit button" name="login">Login</div>
+      </div>
+
+      <div class="ui error message"></div>
+
+    </form>
+
+    <div class="ui message inverted">
+      New to us? <a href="javascript:void(0)" name="signup">Sign Up</a>
+    </div>
+  </div>
+</div>
+
+
+<div class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Profile Picture
+  </div>
+  <div class="content">
+  
+<form id="signup_form" class="ui form warning success error">
+<div class="required field">
+    <label>Your Name</label>
+    <input type="text" name="name" placeholder="name">
+    <div class="ui pointing red basic label">
+      Must be 6 characters or more
+    </div>
+  </div>
+  <div class=" requiredfield">
+    <label>Your Email</label>
+    <input type="text" name="email" placeholder="email">
+    <div class="ui pointing red basic label">
+      Must be valid email address
+    </div>
+  </div>
+  <div class="required field">
+    <label>Password</label>
+    <input type="text" name="password" placeholder="password">
+    <div class="ui pointing red basic label">
+      Must be 6 characters or more
+    </div>
+  </div>
+  <div class="field">
+    <label>Re-enter Password</label>
+    <input type="text" name="repassword" placeholder="repassword">
+  </div>
+  <div class="field">
+    <div class="ui checkbox" data-tooltip="I am the sample terms!">
+      <input type="checkbox" tabindex="0" class="">
+      <label>I agree to the Terms and Conditions</label>
+    </div>
+    <div class="ui warning message">
+    <div class="header">Note!</div>
+    <p>All fields are case <b>INSENSITIVE</b>.</p>
+  </div>
+     
+  </div>
+</form>
+  </div>
+  <div class="actions">
+    <div class="ui black deny button">
+      Cancel
+    </div>
+    <div class="ui positive right labeled icon button" id="final">
+      Register
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</div>
+
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
+<script>
+$(function(){
+
+/* 	$("#video").get(0).play();
+	$('#video').trigger('play'); */
+	$("a[name=signup]").click(function(){
+		$(".ui.modal").modal({
+		    closable  : true,
+		    onShow:function(){
+		    	$("#signup_form").form({
+		    		fields: {
+		    			name: ['minLength[6]','empty','maxLength[16]'],
+		    			email: ['email','empty'],
+		    			password: ['minLength[6]','empty','maxLength[16]']
+		    			//repassword:['match[password]','empty']
+		    		}	
+		    	});
+		    },
+		    onDeny    : function(){
+		      window.alert('!');
+		      return true;
+		    },
+		    onApprove : function() {
+		    	$("#signup_form").form("validate form");
+		    	if($("#signup_form").form("is valid")){
+		    		$.ajax({
+		    			method:'POST',
+		    			url:"account/signup",
+		    			data:$("#signup_form").form("get values"),
+		    			success:function(data){
+		    				if(data.success) {
+		    					window.alert("Account created!");
+		    				} else window.alert(data.data);
+		    			}
+		    			
+		    		});
+		    	}else{
+		    		window.alert('invalid input');
+
+		    		return false;
+		    		}
+		    	
+		      //window.alert('Approved!');
+		    }						
+		}).modal("show");
+
+	});
+	
+	$("#login_form").form({
+		fields:{
+			email:['email','empty'],
+			password: ['minLength[6]','empty','maxLength[16]']
+		}
+	});
+	
+	$("div[name=login]").click(function(){
+		
+		$("#login_form").form("validate form");
+    	if($("#login_form").form("is valid")){
+    		$.ajax({
+    			method:'POST',
+    			url:"account/login",
+    			data:$("#login_form").form("get values"),
+    			success:function(data){
+    				if(data.success) {
+    					
+    					window.alert(data.data);
+    					location.href="home";
+    				} else window.alert(data.data);
+    			}
+    			
+    		});
+    	}
+		
+		
+	});
+
+	
+	
+})
+</script>
+
+
+
+
+
+</html>
